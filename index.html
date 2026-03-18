@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Polo Loco</title>
+  <link rel="icon" type="image/x-icon" href="./assets/icon/favicon.JPG">
+  <link rel="stylesheet" href="./style/style.css" />
+
+  <!-- Basis -->
+  <script src="./scripts/models/drawable/drawable-object.class.js" defer></script>
+  <script src="./scripts/models/movable/movable-object.class.js" defer></script>
+  
+  <!-- Drawable -->
+  <script src="./scripts/models/drawable/statusbar.class.js" defer></script>
+  <script src="./scripts/models/drawable/health-statusbar.class.js" defer></script>
+  <script src="./scripts/models/drawable/coin-statusbar.class.js"   defer></script>
+  <script src="./scripts/models/drawable/bottle-statusbar.class.js" defer></script>
+  <script src="./scripts/models/drawable/endboss-statusbar.class.js"defer></script>
+  <script src="./scripts/models/drawable/background.class.js" defer></script>
+
+  <!-- Movable --> 
+  <script src="./scripts/models/movable/character.class.js" defer></script>
+  <script src="./scripts/models/movable/chicken.class.js"   defer></script>
+  <script src="./scripts/models/movable/chick.class.js"     defer></script>  <script src="./scripts/models/movable/hen.class.js"       defer></script>
+  <script src="./scripts/models/movable/endboss.class.js"   defer></script>
+  <script src="./scripts/models/movable/cloud.class.js"     defer></script>
+  <script src="./scripts/models/movable/coin.class.js"      defer></script>
+  <script src="./scripts/models/movable/throwable-object.class.js" defer></script>
+  <script src="./scripts/models/movable/bottle.class.js"    defer></script>
+
+  <!-- Main -->
+  <script src="./scripts/models/main/keyboard.class.js"  defer></script>
+  <script src="./scripts/models/main/level.class.js"     defer></script>
+  <script src="./scripts/models/main/world.class.js"     defer></script>
+
+  <!-- Game -->
+  <script src="./scripts/levels/level-one.class.js" defer></script>
+  <script src="./scripts/game.js" defer></script>
+</head>
+
+<body onload="init()">
+  <div class="game-container m-width" id="game-container">
+    <!-- START ICONS -->
+    <div class="start-icons" id="start-icons">
+      <div class="start-game" onclick="startNewGame(2000)">
+      </div>
+      <div class="help" onclick="showHelpPage()">
+      </div>
+      <div class="story" onclick="showStory()">
+      </div>
+    </div>
+
+    <!-- START SCREEN -->
+    <div class="start-screen d-none" id="start-screen"></div>
+
+    <!-- GAME OVER -->
+    <div class="gameover-screen d-none" id="gameover-screen">
+      <div onclick="backToMenu()">HOME</div>
+      <div onclick="restartGame()">RESTART</div>
+    </div>
+
+    <!-- GAME WIN -->
+    <div class="gamewin-screen d-none" id="gamewin-screen">
+      <div onclick="backToMenu()">HOME</div>
+      <div onclick="restartGame()">RESTART</div>
+    </div>
+
+    <!-- HELP SCREEN -->
+    <div class="help-screen d-none" id="help-screen">
+      <div class="close" onclick="hideHelpPage()">
+        <img src="./assets/icon/close.png" alt="close">
+      </div>
+      <h2>HELP</h2>
+      <p>Move with LEFT and RIGHT arrow.</p>
+      <p>Jump with SPACE.</p>
+      <p>Throw bottles with D.</p>
+    </div>
+
+    <!-- STORY SCREEN -->
+    <div class="screen d-none" id="story-screen">
+      <div class="close" onclick="hideStory()">
+        <img src="./assets/icon/close.png" alt="close">
+      </div>
+      <h2>STORY</h2>
+      <p>Pepe travels through the desert.</p>
+      <p>Dangerous chickens try to stop him.</p>
+      <p>Defeat the Endboss to win the game.</p>
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div class="game-screen d-none" id="game-screen">
+      <div class="ps-button sound" onclick="toggleMuteSound()">
+        <img src="./assets/icon/sound.png" alt="sound" id="sound-img">
+      </div>
+      <div class="touch-bottons" id="touch-buttons">
+        <div class="left">
+          <div class="ps-button" id="left-key">
+            <img src="./assets/icon/left-arrow.png" alt="left">
+          </div>
+          <div class="ps-button" id="right-key">
+            <img src="./assets/icon/right-arrow.png" alt="right">
+          </div>
+        </div>
+        <div class="right">
+          <div class="ps-button" id="throw-key">
+            <img src="./assets/icon/glass-bottle.png" alt="bottle">
+          </div>
+          <div class="ps-button" id="jump-key">
+            <img src="./assets/icon/jump.png" alt="jump">
+          </div>
+        </div>
+      </div>
+      <canvas id="canvas" width="720" height="480"></canvas>
+    </div>
+  </div>
+
+  <!-- ROTATE MESSAGE -->
+  <div class="rotate">
+    <p>Please rotate your device</p>
+    <video autoplay muted loop>
+      <source src="assets/video/rotate.mp4" type="video/mp4">
+    </video>
+  </div>
+</body>
+</html>
