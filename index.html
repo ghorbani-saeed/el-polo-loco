@@ -6,42 +6,32 @@
   <title>El Polo Loco</title>
   <link rel="icon" type="image/x-icon" href="./assets/icon/favicon.JPG">
   <link rel="stylesheet" href="./style/style.css" />
-
-  <!-- Basis -->
   <script src="./scripts/models/drawable/drawable-object.class.js" defer></script>
   <script src="./scripts/models/movable/movable-object.class.js" defer></script>
-  
-  <!-- Drawable -->
   <script src="./scripts/models/drawable/statusbar.class.js" defer></script>
   <script src="./scripts/models/drawable/health-statusbar.class.js" defer></script>
   <script src="./scripts/models/drawable/coin-statusbar.class.js"   defer></script>
   <script src="./scripts/models/drawable/bottle-statusbar.class.js" defer></script>
   <script src="./scripts/models/drawable/endboss-statusbar.class.js"defer></script>
   <script src="./scripts/models/drawable/background.class.js" defer></script>
-
-  <!-- Movable --> 
   <script src="./scripts/models/movable/character.class.js" defer></script>
   <script src="./scripts/models/movable/chicken.class.js"   defer></script>
-  <script src="./scripts/models/movable/chick.class.js"     defer></script>  <script src="./scripts/models/movable/hen.class.js"       defer></script>
+  <script src="./scripts/models/movable/chick.class.js"     defer></script>  
+  <script src="./scripts/models/movable/hen.class.js"       defer></script>
   <script src="./scripts/models/movable/endboss.class.js"   defer></script>
   <script src="./scripts/models/movable/cloud.class.js"     defer></script>
   <script src="./scripts/models/movable/coin.class.js"      defer></script>
   <script src="./scripts/models/movable/throwable-object.class.js" defer></script>
   <script src="./scripts/models/movable/bottle.class.js"    defer></script>
-
-  <!-- Main -->
   <script src="./scripts/models/main/keyboard.class.js"  defer></script>
   <script src="./scripts/models/main/level.class.js"     defer></script>
   <script src="./scripts/models/main/world.class.js"     defer></script>
-
-  <!-- Game -->
   <script src="./scripts/levels/level-one.class.js" defer></script>
   <script src="./scripts/game.js" defer></script>
 </head>
 
 <body onload="init()">
   <div class="game-container m-width" id="game-container">
-    <!-- START ICONS -->
     <div class="start-icons" id="start-icons">
       <div class="start-game" onclick="startNewGame(2000)">
       </div>
@@ -50,23 +40,15 @@
       <div class="story" onclick="showStory()">
       </div>
     </div>
-
-    <!-- START SCREEN -->
     <div class="start-screen d-none" id="start-screen"></div>
-
-    <!-- GAME OVER -->
     <div class="gameover-screen d-none" id="gameover-screen">
       <div onclick="backToMenu()">HOME</div>
       <div onclick="restartGame()">RESTART</div>
     </div>
-
-    <!-- GAME WIN -->
     <div class="gamewin-screen d-none" id="gamewin-screen">
       <div onclick="backToMenu()">HOME</div>
       <div onclick="restartGame()">RESTART</div>
     </div>
-
-    <!-- HELP SCREEN -->
     <div class="help-screen d-none" id="help-screen">
       <div class="close" onclick="hideHelpPage()">
         <img src="./assets/icon/close.png" alt="close">
@@ -76,8 +58,6 @@
       <p>Jump with SPACE.</p>
       <p>Throw bottles with D.</p>
     </div>
-
-    <!-- STORY SCREEN -->
     <div class="screen d-none" id="story-screen">
       <div class="close" onclick="hideStory()">
         <img src="./assets/icon/close.png" alt="close">
@@ -87,8 +67,6 @@
       <p>Dangerous chickens try to stop him.</p>
       <p>Defeat the Endboss to win the game.</p>
     </div>
-
-    <!-- GAME SCREEN -->
     <div class="game-screen d-none" id="game-screen">
       <div class="ps-button sound" onclick="toggleMuteSound()">
         <img src="./assets/icon/sound.png" alt="sound" id="sound-img">
@@ -114,8 +92,6 @@
       <canvas id="canvas" width="720" height="480"></canvas>
     </div>
   </div>
-
-  <!-- ROTATE MESSAGE -->
   <div class="rotate">
     <p>Please rotate your device</p>
     <video autoplay muted loop>

@@ -1,7 +1,3 @@
-/**
- * Class representing a small enemy chicken (Chick).
- * Extends Chicken.
- */
 class Chick extends Chicken {
   y = 385;
   w = 30;

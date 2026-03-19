@@ -1,36 +1,18 @@
-/**
- * Class representing the main playable character.
- * Extends MovableObject.
- */
 class Character extends MovableObject {
-  /** X position of the character */
   x = 100;
-  /** Y position of the character */
   y = 200;
-  /** Width of the character */
   w = 130;
-  /** Height of the character */
   h = 220;
-  /** Movement speed */
   speed = 8;
-  /** Character's current health */
   energy = 100;
-  /** Collected coins in percentage */
   coins = 0;
-  /** Collected bottles in percentage */
   bottles = 0;
-  /** Flag indicating if the character is throwing a bottle */
   isThrowingBottle = false;
-  /** Coin increment per pickup */
   coinsToAdded = 0;
-  /** Bottle increment per pickup */
   bottlesToAdded = 0;
-  /** Energy lost per hit */
   energyToRemove = 5;
-  /** Flag indicating if the character reached the danger area */
   reachedToDangerArea = false;
 
-  /** Collision offsets for more accurate detection */
   offset = {
     right: 20,
     left: 20,
@@ -38,7 +20,6 @@ class Character extends MovableObject {
     bottom: 10,
   };
 
-  /** Idle animation images */
   IMAGES_IDLE = [
     "assets/img/2_character_pepe/1_idle/idle/I-1.png",
     "assets/img/2_character_pepe/1_idle/idle/I-2.png",
@@ -52,7 +33,6 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/1_idle/idle/I-10.png",
   ];
 
-  /** Long idle animation images */
   IMAGES_LONG_IDLE = [
     "assets/img/2_character_pepe/1_idle/long_idle/I-11.png",
     "assets/img/2_character_pepe/1_idle/long_idle/I-12.png",
@@ -66,7 +46,6 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/1_idle/long_idle/I-20.png",
   ];
 
-  /** Walking animation images */
   IMAGES_WALK = [
     "assets/img/2_character_pepe/2_walk/W-21.png",
     "assets/img/2_character_pepe/2_walk/W-22.png",
@@ -76,7 +55,6 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/2_walk/W-26.png",
   ];
 
-  /** Jump animation images */
   IMAGES_JUMP = [
     "assets/img/2_character_pepe/3_jump/J-31.png",
     "assets/img/2_character_pepe/3_jump/J-32.png",
@@ -89,14 +67,12 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/3_jump/J-39.png",
   ];
 
-  /** Hurt animation images */
   IMAGES_HURT = [
     "assets/img/2_character_pepe/4_hurt/H-41.png",
     "assets/img/2_character_pepe/4_hurt/H-42.png",
     "assets/img/2_character_pepe/4_hurt/H-43.png",
   ];
 
-  /** Dead animation images */
   IMAGES_DEAD = [
     "assets/img/2_character_pepe/5_dead/D-51.png",
     "assets/img/2_character_pepe/5_dead/D-52.png",
@@ -106,19 +82,11 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/5_dead/D-56.png",
   ];
 
-  /** Sleep sound effect */
   SLEEP_SOUND;
-  /** Hurt sound effect */
   HURT_SOUND;
-  /** Death sound effect */
   DEAD_SOUND;
-  /** Counter to ensure death sound plays only once */
   DEAD_SOUND_PLAY_COUNT = 1;
 
-  /**
-   * Create a Character instance.
-   * Initializes images, sounds, animation, movement, gravity, and intervals.
-   */
   constructor() {
     super();
     this.loadImage(this.IMAGES_IDLE[0]);
@@ -129,7 +97,6 @@ class Character extends MovableObject {
     this.setSounds();
   }
 
-  /** Load and set all sound effects */
   setSounds() {
     this.SLEEP_SOUND = new Audio("assets/sounds/sleeping.mp3");
     this.SLEEP_SOUND.volume = 0.1;
@@ -140,7 +107,6 @@ class Character extends MovableObject {
     this.DEAD_SOUND.loop = false;
   }
 
-  /** Load all animation image sets */
   loadAllImages() {
     this.loadImages(this.IMAGES_IDLE);
     this.loadImages(this.IMAGES_LONG_IDLE);
@@ -150,38 +116,26 @@ class Character extends MovableObject {
     this.loadImages(this.IMAGES_DEAD);
   }
 
-  /**
-   * Assign the world reference and calculate increments for coins/bottles.
-   * @param {World} world - The game world instance
-   */
   setWorld(world) {
     this.world = world;
     this.coinsToAdded = 100 / this.world.level.coins.length;
     this.bottlesToAdded = 100 / this.world.level.bottles.length;
   }
 
-  /** Increase coin count */
   getCoin() {
     this.coins += this.coinsToAdded;
   }
 
-  /** Increase bottle count */
   getBottle() {
     this.bottles += this.bottlesToAdded;
   }
 
-  /** Check if the character is currently moving left or right */
   isMoving() {
     return (
       this.world.keyboard.RIGHT === true || this.world.keyboard.LEFT === true
     );
   }
 
-  /**
-   * Check if the character can kill an enemy by jumping on it
-   * @param {MovableObject} mo - The enemy object
-   * @returns {boolean} True if the enemy can be killed
-   */
   isKillEnemy(mo) {
     const horizontalOverlap =
       this.x + this.w - this.offset.right > mo.x + mo.offset.left &&
@@ -197,7 +151,6 @@ class Character extends MovableObject {
     );
   }
 
-  /** Trigger endboss movement when player reaches danger area */
   reachToDangerArea() {
     if (this.x > this.world.level.gameDangerArea && !this.reachedToDangerArea) {
       this.reachedToDangerArea = true;
@@ -205,7 +158,6 @@ class Character extends MovableObject {
     }
   }
 
-  /** Check if the character is dead and trigger game over after delay */
   checkCharacterIsDead() {
     if (this.isDead()) {
       setTimeout(() => {
@@ -214,17 +166,12 @@ class Character extends MovableObject {
     }
   }
 
-  /**
-   * Check if character has been inactive for more than 10 seconds
-   * @returns {boolean} True if character is sleeping
-   */
   isSleeping() {
-    let timePassed = new Date().getTime() - this.lastMove; //In miliseconds
-    timePassed = timePassed / 1000; //In seconds
+    let timePassed = new Date().getTime() - this.lastMove; 
+    timePassed = timePassed / 1000; 
     return timePassed > 10;
   }
 
-  /** Play sleep sound if game is not muted */
   playSleepSound() {
     this.HURT_SOUND.pause();
     if (this.world.isMute === false) {
@@ -232,7 +179,6 @@ class Character extends MovableObject {
     }
   }
 
-  /** Play hurt sound if game is not muted */
   playHurtSound() {
     this.SLEEP_SOUND.pause();
     if (this.world.isMute === false) {
@@ -240,7 +186,6 @@ class Character extends MovableObject {
     }
   }
 
-  /** Play death sound once if game is not muted */
   playDeadSound() {
     this.SLEEP_SOUND.pause();
     this.HURT_SOUND.pause();
@@ -251,14 +196,12 @@ class Character extends MovableObject {
     }
   }
 
-  /** Stop all character-related sounds */
   stopAllSound() {
     this.SLEEP_SOUND.pause();
     this.HURT_SOUND.pause();
     this.DEAD_SOUND.pause();
   }
 
-  /** Animate the character based on state */
   animate() {
     this.intervals.push(
       setInterval(() => {
@@ -288,14 +231,10 @@ class Character extends MovableObject {
             this.stopAllSound();
             break;
         }
-      }, 1000 / 10) // Run animation updates at 10 frames per second
+      }, 1000 / 10) 
     );
   }
 
-  /**
-   * Can character move right within boundary?
-   * @returns {boolean} True if RIGHT key pressed and within limit
-   */
   canMoveRight() {
     return (
       this.world.keyboard.RIGHT === true &&
@@ -303,10 +242,6 @@ class Character extends MovableObject {
     );
   }
 
-  /**
-   * Can character move left within boundary?
-   * @returns {boolean} True if LEFT key pressed and within limit
-   */
   canMoveLeft() {
     return (
       this.world.keyboard.LEFT === true &&
@@ -314,18 +249,10 @@ class Character extends MovableObject {
     );
   }
 
-  /**
-   * Can character jump (only on ground)?
-   * @returns {boolean} True if SPACE pressed and on ground
-   */
   canJump() {
     return this.world.keyboard.SPACE === true && !this.isAboveGround();
   }
 
-  /**
-   * Can character throw a bottle?
-   * @returns {boolean} True if D pressed, bottles available, not throwing
-   */
   canThrowBottle() {
     return (
       this.world.keyboard.D === true &&
@@ -334,7 +261,6 @@ class Character extends MovableObject {
     );
   }
 
-  /** Move character to the right if possible */
   handleMoveRight() {
     if (this.canMoveRight()) {
       this.moveRight();
@@ -342,7 +268,6 @@ class Character extends MovableObject {
     }
   }
 
-  /** Move character to the left if possible */
   handleMoveLeft() {
     if (this.canMoveLeft()) {
       this.moveLeft();
@@ -350,14 +275,12 @@ class Character extends MovableObject {
     }
   }
 
-  /** Make the character jump if possible  */
   handleJump() {
     if (this.canJump()) {
       this.jump();
     }
   }
 
-  /** Throw a bottle if possible and update game state  */
   handleThrowBottle() {
     if (this.canThrowBottle()) {
       this.isThrowingBottle = true;
@@ -373,7 +296,6 @@ class Character extends MovableObject {
     }
   }
 
-  /** Handle character death animation  */
   handleDeath() {
     if (this.isDead()) {
       setTimeout(() => {
@@ -382,14 +304,12 @@ class Character extends MovableObject {
     }
   }
 
-  /** Handle character camera movement  */
   handleCamera() {
     if (this.x < this.world.level.gameEndPosition) {
       this.world.camera = -this.x + 100;
     }
   }
 
-  /** Character movements  */
   move() {
     this.intervals.push(
       setInterval(() => {
@@ -403,7 +323,6 @@ class Character extends MovableObject {
     );
   }
 
-  /** Check if any enemies are killed by the player and handle their death  */
   checkKillEnemy() {
     for (const enemy of this.world.level.enemies) {
       if (this.isKillEnemy(enemy) && enemy.energy > 0) {
@@ -413,7 +332,6 @@ class Character extends MovableObject {
     }
   }
 
-  /** Clear all active intervals and reset the intervals array  */
   clearAllInterval() {
     this.intervals.forEach((id) => clearInterval(id));
     this.intervals = [];

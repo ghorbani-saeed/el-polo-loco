@@ -49,14 +49,12 @@ body {
 
 .start-icons {
     position: absolute;
-    bottom: 50px; /* Abstand vom unteren Bildschirmrand */
+    bottom: 50px; 
     left: 50%;
     transform: translateX(-50%);
-    width: 1500px; /* Gesamtbereich für das Dreieck */
-    height: 700px; /* Höhe des Dreiecks */
+    width: 1500px; 
+    height: 700px; 
     position: relative;
-
-    /* Alle Icons innerhalb von start-icons */
     > div {
         position: absolute;
         width: 300px;
@@ -68,8 +66,6 @@ body {
         display: flex;
         justify-content: center;
         align-items: center;
-
-        /* Standard Hover für alle Icons */
         &:hover {
             transform: translateX(-50%) scale(1.25) rotate(-20deg);
             box-shadow:
@@ -78,15 +74,11 @@ body {
             filter: brightness(1.2);
         }
     }
-
-    /* Start-Button */
     .start-game {
         background-image: url("../assets/icon/startFirstPage.png");
         top: 0;
         left: 50%;
         transform: translateX(-50%);
-
-        /* Hover für Start-Button separat, damit er zentriert bleibt */
         &:hover {
             transform: translateX(-30%) scale(1.25) rotate(10deg);
             box-shadow:
@@ -95,8 +87,6 @@ body {
             filter: brightness(1.2);
         }
     }
-
-    /* Help-Icon */
     .help {
         background-image: url("../assets/icon/help.png");
         bottom: 0;
@@ -105,8 +95,6 @@ body {
         justify-content: center;
         align-items: center;
     }
-
-    /* Story-Icon */
     .story {
         background-image: url("../assets/icon/story.png");
         bottom: 0;
@@ -227,7 +215,7 @@ body {
 
 .help-screen {
     p {
-        font-size: 35px; /* vorher 25px, jetzt größer */
+        font-size: 35px; 
     }
     .buttoms {
         display: flex;
