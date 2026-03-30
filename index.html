@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">    
+    <title>El Polo Loco</title>
+    <link rel="icon" type="image/x-icon" href="./assets/icon/favicon.jpg">
+    <link rel="stylesheet" href="./style.css" />
+    
+<script src="./scripts/models/drawable/drawable-object.class.js" defer></script>
+<script src="./scripts/models/movable/movable-object.class.js" defer></script>
+
+<script src="./scripts/models/drawable/statusbar.class.js" defer></script>
+<script src="./scripts/models/drawable/health-statusbar.class.js" defer></script>
+<script src="./scripts/models/drawable/coin-statusbar.class.js" defer></script>
+<script src="./scripts/models/drawable/bottle-statusbar.class.js" defer></script>
+<script src="./scripts/models/drawable/endboss-statusbar.class.js" defer></script>
+<script src="./scripts/models/drawable/background.class.js" defer></script>
+<script src="./scripts/models/movable/character.class.js" defer></script> 
+<script src="./scripts/models/movable/chicken.class.js" defer></script>
+<script src="./scripts/models/movable/chick.class.js" defer></script>   
+<script src="./scripts/models/movable/hen.class.js" defer></script>
+<script src="./scripts/models/movable/endboss.class.js" defer></script>
+<script src="./scripts/models/movable/cloud.class.js" defer></script>
+<script src="./scripts/models/movable/coin.class.js" defer></script>
+<script src="./scripts/models/movable/throwable-object.class.js" defer></script>
+<script src="./scripts/models/movable/bottle.class.js" defer></script>
+
+<script src="./scripts/models/main/keyboard.class.js" defer></script>
+<script src="./scripts/models/main/level.class.js" defer></script>
+<script src="./scripts/models/main/world.class.js" defer></script>
+<script src="./scripts/levels/level-one.class.js" defer></script>
+<script src="./scripts/game.js" defer></script>
+</head>
+
+<body onload="init()">
+    <div class="game-container m-width" id="game-container">
+
+        <div class="start-icons" id="start-icons">
+            <div class="start-game" onclick="startNewGame(2000)"></div>
+            <div class="bottom-row">
+               <div class="help" onclick="showHelpPage()"></div>
+               <div class="impressum-icon-button" onclick="showImpressum()"></div>
+               <div class="story" onclick="showStory()"></div>
+            </div>
+        </div>
+
+        <div class="start-screen d-none" id="start-screen"></div>
+
+        <div class="gameover-screen d-none" id="gameover-screen">
+            <div onclick="backToMenu()">HOME</div>
+            <div onclick="restartGame()">RESTART</div>
+        </div>
+
+        <div class="gamewin-screen d-none" id="gamewin-screen">
+            <div onclick="backToMenu()">HOME</div>
+            <div onclick="restartGame()">RESTART</div>
+        </div>
+
+        <div class="help-screen d-none" id="help-screen">
+            <div class="close" onclick="hideHelpPage()">
+                <img src="./assets/icon/close.png" alt="close">
+            </div>
+            <h2>H E L P</h2>
+            <div class="help-content">
+                <p>Move with LEFT and RIGHT arrow.</p>
+                <p>Jump with SPACE.</p>
+                <p>Throw bottles with D.</p>
+            </div>
+        </div>
+
+        <div class="screen d-none" id="story-screen">
+            <div class="close" onclick="hideStory()">
+                <img src="./assets/icon/close.png" alt="close">
+            </div>
+            <h2>S T O R Y</h2>
+            <p>Pepe travels through the desert.</p>
+            <p>Dangerous chickens try to stop him.</p>
+            <p>Defeat the Endboss to win the game.</p>
+        </div>
+        
+        <div class="screen d-none" id="impressum-screen">
+            <div class="close" onclick="hideImpressum()">
+                <img src="./assets/icon/close.png" alt="close">
+            </div>
+            <h2>I M P R E S S U M</h2>
+            <div class="screen-text">
+                <p>Saeed Ghorbani</p>
+                <p>Gerd-Jansen-Platz 5</p>
+                <p>47546 Kalkar</p>
+                <p><strong>Email:</strong> <a href="mailto:ghorbani.saeed@web.de" style="color: lightblue;">ghorbani.saeed@web.de</a></p>
+                <p><strong>GitHub:</strong> <a href="https://github.com/ghorbani-saeed" target="_blank" style="color: lightblue;">ghorbani-saeed</a></p>
+            </div>
+        </div>
+
+        <div class="game-screen d-none" id="game-screen">
+            <div class="ps-button sound" onclick="toggleMuteSound()">
+                <img src="./assets/icon/sound.png" alt="sound" id="sound-img">
+            </div>
+            
+            <div class="touch-buttons" id="touch-buttons">
+                <div class="left">
+                    <div class="ps-button" id="left-key">
+                    </div>
+                    <div class="ps-button" id="right-key">
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="ps-button" id="throw-key">
+                    </div>
+                    <div class="ps-button" id="jump-key">
+                    </div>
+                </div>
+            </div>
+
+            <canvas id="canvas" width="720" height="480"></canvas>
+        </div>
+    </div>
+
+    <div class="rotate" id="rotate-screen">
+        <p>Please rotate your device</p>
+        <video autoplay muted loop playsinline>
+            <source src="assets/video/rotate.mp4" type="video/mp4">
+        </video>
+    </div>
+</body>
+</html>
