@@ -91,7 +91,7 @@ class World {
         this.checkCharacterBottlesCollision();
         this.checkEndbossThrowableCollision();
         this.checkThrowableEnemiesCollision();
-        this.checkThrowableObjects();
+        // this.checkThrowableObjects();
       }, 200)
     );
   }
