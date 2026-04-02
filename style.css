@@ -96,7 +96,6 @@ body {
     &:hover {
         transform: scale(1.05) !important;
         filter: brightness(1.2);
-        box-shadow: 0 0 20px rgba(255, 255, 0, 0.6);
     }
 }
 
@@ -121,9 +120,6 @@ body {
         flex-shrink: 1;
         &:hover {
             transform: scale(1) rotate(-5deg);
-            box-shadow:
-                0 0 20px rgba(255, 255, 0, 0.8),
-                0 0 20px rgba(255, 150, 0, 0.6);
             filter: brightness(1.1);
         }
     }
@@ -142,11 +138,9 @@ body {
 }
 .story {
     background-image: url("./assets/icon/story.png");
+    
     &:hover {
         transform: scale(1) rotate(5deg) !important;
-        box-shadow:
-            0 0 20px rgba(255, 255, 0, 0.8),
-            0 0 20px rgba(255, 150, 0, 0.6);
         filter: brightness(1.1);
     }
 }

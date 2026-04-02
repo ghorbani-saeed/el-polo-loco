@@ -1,5 +1,5 @@
 class Character extends MovableObject {
-    x = 100;
+    x = 0;
     y = 200;
     w = 130;
     h = 220;
@@ -124,12 +124,12 @@ class Character extends MovableObject {
     }
 
     getCoin() {
-    if (this.coins < 10) {    
-        this.coins += 1;
-        let percent = (this.coins / 10) * 100;
-        this.world.level.coinStatusBar.setPersentage(percent);
+        if (this.coins < 10) {
+            this.coins += 1;
+            let percent = (this.coins / 10) * 100;
+            this.world.level.coinStatusBar.setPersentage(percent);
+        }
     }
-}
 
     getBottle() {
         if (this.bottles < 10) {
@@ -224,19 +224,41 @@ class Character extends MovableObject {
     }
 
     animate() {
-    this.intervals.push(setInterval(() => {
-        let img = this.IMAGES_IDLE;
-        if (this.isDead())        { img = this.IMAGES_DEAD; this.playDeadSound(); }
-        else if (this.isHurt())   { img = this.IMAGES_HURT; this.playHurtSound(); }
-        else if (this.isAboveGround()) img = this.IMAGES_JUMP;
-        else if (this.isMoving())      img = this.IMAGES_WALK;
-        else if (this.isSleeping())    { img = this.IMAGES_LONG_IDLE; this.playSleepSound(); }
+        this.intervals.push(
+            setInterval(() => {
+                let img = this.IMAGES_IDLE;
+                if (this.isDead()) {
+                    img = this.IMAGES_DEAD;
+                    this.playDeadSound();
+                } else if (this.isHurt()) {
+                    img = this.IMAGES_HURT;
+                    this.playHurtSound();
+                } else if (this.isAboveGround()) {
+                    // MINIMALE ÄNDERUNG HIER:
+                    this.playJumpAnimation();
+                    return;
+                } else if (this.isMoving()) img = this.IMAGES_WALK;
+                else if (this.isSleeping()) {
+                    img = this.IMAGES_LONG_IDLE;
+                    this.playSleepSound();
+                }
 
-        this.playAnimation(img, this.isDead());
-        if (!this.isDead() && !this.isHurt() && !this.isSleeping()) this.stopAllSound();
-    }, 100));
-}
+                this.playAnimation(img); 
+                if (!this.isDead() && !this.isHurt() && !this.isSleeping())
+                    this.stopAllSound();
+            }, 100),
+        );
+    }
 
+    playJumpAnimation() {
+        let i = this.currentImage % this.IMAGES_JUMP.length; 
+        let path = this.IMAGES_JUMP[i];
+        this.img = this.imageCache[path];
+        this.currentImage++;
+        if (i >= this.IMAGES_JUMP.length - 1) {
+            this.currentImage = this.IMAGES_JUMP.length - 1;
+        }
+    }
     canMoveRight() {
         return (
             this.world.keyboard.RIGHT === true &&
@@ -244,12 +266,14 @@ class Character extends MovableObject {
         );
     }
 
+  
+
     canMoveLeft() {
         return (
-            this.world.keyboard.LEFT === true &&
-            this.x > this.world.level.gameStartPosition
+            this.world.keyboard.LEFT === true && this.x > 0 
         );
     }
+
 
     canJump() {
         return this.world.keyboard.SPACE === true && !this.isAboveGround();
@@ -291,7 +315,7 @@ class Character extends MovableObject {
             throwableObject.setWorld(this.world);
             this.world.level.throwableObjects.push(throwableObject);
             this.bottles -= 1;
-            let percent = (this.bottles / 10) * 100; 
+            let percent = (this.bottles / 10) * 100;
             this.world.level.bottleStatusBar.setPersentage(percent);
             setTimeout(() => {
                 this.isThrowingBottle = false;

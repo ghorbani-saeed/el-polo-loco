@@ -27,8 +27,9 @@ class Coin extends MovableObject {
   setWorld(world) {
     this.world = world;
     let maximumPosition =
-      this.world.level.gameEndPosition - this.world.level.endboss.w;
+    this.world.level.gameEndPosition - this.world.level.endboss.w;
     this.x = 400 + Math.random() * maximumPosition;
+    this.y = 50 + Math.random() * 250; 
   }
 
   setSounds() {

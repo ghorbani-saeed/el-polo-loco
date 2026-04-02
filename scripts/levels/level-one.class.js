@@ -1,10 +1,10 @@
 class LevelOne extends Level {
   GAME_LEFT_SCREEN_COUNT = 2;
   GAME_RIGHT_SCREEN_COUNT = 5;
-  COINS_COUNT = 30;
+  COINS_COUNT = 10;
   HENS_COUNT = 10;
   CHICKS_COUNT = 10;
-  BOTTLE_COUNT = 20;
+  BOTTLE_COUNT = 10;
   constructor() {
     super();
     this.setEndboss();
