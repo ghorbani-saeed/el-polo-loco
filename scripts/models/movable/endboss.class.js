@@ -79,7 +79,9 @@ class Endboss extends MovableObject {
 
     setSounds() {
     this.END_BOSS_DEAD_SOUND = new Audio("assets/sounds/endboss-dead.mp3");
+    this.END_BOSS_HIT_SOUND = new Audio("assets/sounds/endboss_hit.mp3"); 
     this.END_BOSS_DEAD_SOUND.volume = 0.3;
+    this.END_BOSS_HIT_SOUND.volume = 0.4;
   }
 
  
@@ -193,15 +195,19 @@ playAttackAnimation() {
     this.intervals.forEach((id) => clearInterval(id));
     this.intervals = [];
   }
+
   hit() {
   if (this.isDead()) return; 
+  if (this.world && !this.world.isMute) {
+    this.END_BOSS_HIT_SOUND.play();
+  }
   this.energy -= 25; 
   if (this.energy < 0) this.energy = 0;
-
   if (this.world) {
     this.world.level.endbossStatusBar.setPersentage(this.energy);
     this.world.level.endbossStatusBar.visible = true;
   }
- }
+  this.checkEndBossIsDead();
+}
 }
 
