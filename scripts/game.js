@@ -37,6 +37,8 @@ let keyboard;
 /** @type {boolean} Flag to prevent multiple overlays from opening */
 let isOverlayOpen = false;
 
+let touchButtonsEnabled = false;
+
 /**
  * Initializes the game application by fetching DOM elements and setting up input.
  */
@@ -120,6 +122,12 @@ function startNewGame(delay = 100, restart = false) {
     checkMuteStatus();
     updateTouchButtons();
     showGameScreenAfterDelay(delay);
+    updateTouchButtons();
+}
+
+function toggleTouchButtons() {
+    touchButtonsEnabled = !touchButtonsEnabled;
+    updateTouchButtons();
 }
 
 /**
@@ -247,7 +255,7 @@ function showGameOverScreen() {
     gameOverScreenElement.classList.remove("d-none");
     const touchButtons = document.getElementById("touch-buttons");
     if (touchButtons) {
-        touchButtons.style.setProperty('display', 'none', 'important');
+        touchButtons.classList.remove("show");
     }
 }
 
@@ -278,14 +286,24 @@ function hideGameWinScreen() {
 function updateTouchButtons() {
     const touchButtons = document.getElementById("touch-buttons");
     if (!touchButtons) return;
-    
-    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
-    const isSmallScreen = window.innerWidth <= 834;
 
-    if (isTouch || isSmallScreen) {
-        touchButtons.style.setProperty('display', 'flex', 'important');
+    const isSmallHeight = window.innerHeight < 500;
+    const isSmallWidth = window.innerWidth <= 833;
+    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+    // Logik: 
+    // 1. Wenn Höhe < 500px -> IMMER AUS
+    if (isSmallHeight) {
+        touchButtons.classList.remove('show');
+        return; 
+    }
+
+    // 2. Wenn manuell eingeschaltet ODER (Touch-Gerät UND Breite <= 833px)
+    // Wir nehmen "isSmallWidth" nur als Bedingung für den Auto-Show auf mobilen Geräten
+    if (touchButtonsEnabled || (isTouchDevice && isSmallWidth)) {
+        touchButtons.classList.add('show');
     } else {
-        touchButtons.style.setProperty('display', 'none', 'important');
+        touchButtons.classList.remove('show');
     }
 }
 
@@ -294,27 +312,50 @@ function updateTouchButtons() {
  */
 function bindTouchEvents() {
     const keys = [
-        { id: 'left-key', prop: 'LEFT' },
-        { id: 'right-key', prop: 'RIGHT' },
-        { id: 'jump-key', prop: 'SPACE' },
-        { id: 'throw-key', prop: 'D' }
+        { id: "left-key", prop: "LEFT" },
+        { id: "right-key", prop: "RIGHT" },
+        { id: "jump-key", prop: "SPACE" },
+        { id: "throw-key", prop: "D" },
     ];
 
-    keys.forEach(key => {
+    keys.forEach((key) => {
         const element = document.getElementById(key.id);
         if (!element) return;
 
-        element.addEventListener('touchstart', (e) => {
-            if (e.cancelable) e.preventDefault();
-            keyboard[key.prop] = true;
-        }, { passive: false });
+        // TOUCH
+        element.addEventListener(
+            "touchstart",
+            (e) => {
+                e.preventDefault();
+                keyboard[key.prop] = true;
+            },
+            { passive: false },
+        );
 
-        element.addEventListener('touchend', (e) => {
-            if (e.cancelable) e.preventDefault();
+        element.addEventListener(
+            "touchend",
+            (e) => {
+                e.preventDefault();
+                keyboard[key.prop] = false;
+            },
+            { passive: false },
+        );
+
+        // 👉 NEU: MOUSE SUPPORT
+        element.addEventListener("mousedown", () => {
+            keyboard[key.prop] = true;
+        });
+
+        element.addEventListener("mouseup", () => {
             keyboard[key.prop] = false;
-        }, { passive: false });
+        });
+
+        element.addEventListener("mouseleave", () => {
+            keyboard[key.prop] = false;
+        });
     });
 }
+
 
 // Event Listeners for responsive UI
 window.addEventListener("resize", updateTouchButtons);

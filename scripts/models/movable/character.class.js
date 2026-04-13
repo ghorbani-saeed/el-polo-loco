@@ -31,7 +31,7 @@ class Character extends MovableObject {
     /** @type {boolean} Flag to trigger boss fight or danger state */
     reachedToDangerArea = false;
 
-    /** * @type {Object} Collision box fine-tuning 
+    /** * @type {Object} Collision box fine-tuning
      * @property {number} right - Pixels to ignore from the right edge
      * @property {number} left - Pixels to ignore from the left edge
      * @property {number} top - Pixels to ignore from the top edge
@@ -147,7 +147,6 @@ class Character extends MovableObject {
         this.DEAD_SOUND.loop = false;
     }
 
-
     /**
      * Loads all animation image sets into the image cache.
      */
@@ -221,14 +220,18 @@ class Character extends MovableObject {
         const horizontalOverlap =
             this.x + this.w - this.offset.right > mo.x + mo.offset.left &&
             this.x + this.offset.left < mo.x + mo.w - mo.offset.right;
+
         const heightDifferent =
-            mo.y + mo.h - mo.offset.bottom - (this.y + this.h - this.offset.bottom);
-        const isPushing = heightDifferent < 60 && heightDifferent > 30;
+            mo.y +
+            mo.h -
+            mo.offset.bottom -
+            (this.y + this.h - this.offset.bottom);
+
+        // Wir machen den Bereich etwas größer (10 bis 80), damit es bei schnellen Sprüngen besser greift
+        const isPushing = heightDifferent < 80 && heightDifferent > 10;
+
         return (
-            horizontalOverlap &&
-            isPushing &&
-            !this.world.keyboard.SPACE &&
-            mo.energy > 0
+            horizontalOverlap && isPushing && this.speedY < 0 // Pepe fällt gerade nach unten
         );
     }
 
@@ -330,7 +333,7 @@ class Character extends MovableObject {
                     this.playSleepSound();
                 }
 
-                this.playAnimation(img); 
+                this.playAnimation(img);
                 if (!this.isDead() && !this.isHurt() && !this.isSleeping())
                     this.stopAllSound();
             }, 100),
@@ -341,7 +344,7 @@ class Character extends MovableObject {
      * Plays the jump animation and holds the last frame until landing.
      */
     playJumpAnimation() {
-        let i = this.currentImage % this.IMAGES_JUMP.length; 
+        let i = this.currentImage % this.IMAGES_JUMP.length;
         let path = this.IMAGES_JUMP[i];
         this.img = this.imageCache[path];
         this.currentImage++;
@@ -360,9 +363,7 @@ class Character extends MovableObject {
 
     /** @returns {boolean} Check if moving left is allowed. */
     canMoveLeft() {
-        return (
-            this.world.keyboard.LEFT === true && this.x > 0 
-        );
+        return this.world.keyboard.LEFT === true && this.x > 0;
     }
 
     /** @returns {boolean} Check if jumping is allowed. */
@@ -438,7 +439,7 @@ class Character extends MovableObject {
     }
 
     /**
-     * Master movement loop running at 60 FPS. 
+     * Master movement loop running at 60 FPS.
      * Handles all input-related actions and camera updates.
      */
     move() {

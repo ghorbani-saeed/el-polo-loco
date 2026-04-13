@@ -92,7 +92,7 @@ class World {
                 this.checkEndbossThrowableCollision();
                 this.checkThrowableEnemiesCollision();
                 // this.checkThrowableObjects();
-            }, 200),
+            }, 1000 / 60),
         );
     }
 
@@ -134,7 +134,8 @@ class World {
                 distance < 90 &&
                 this.character.isColliding(enemy) &&
                 enemy.energy > 0 &&
-                !this.character.isDead()
+                !this.character.isDead() &&
+                !this.character.isHurt() 
             ) {
                 this.character.hit();
                 this.level.healthStatusBar.setPersentage(this.character.energy);

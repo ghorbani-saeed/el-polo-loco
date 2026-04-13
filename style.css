@@ -161,7 +161,7 @@ body {
     align-items: center !important;
     text-align: center !important;
 }
-help-screen .help-content,
+.help-screen .help-content,
 .help-screen .help-content p {
     flex-direction: column !important;
     align-items: center !important;
@@ -262,6 +262,8 @@ help-screen .help-content,
     align-items: start;
     font-size: 35px;
     gap: 50px;
+    position: absolute;
+    z-index: 20000;
 }
 
 .gameover-screen > div,
@@ -360,76 +362,126 @@ help-screen .help-content,
 
 canvas {
     background: black;
+    position: relative;
+    z-index: 1;
 }
 
 .d-none {
     display: none;
 }
 
+.game-screen {
+    position: relative;
+}
+.sound {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    z-index: 9999;
+}
+
 /* Grundzustand: Auf dem PC verstecken */
 .touch-buttons {
     display: none;
+    touch-action: none;
+    pointer-events: none;
     position: absolute;
-    bottom: 4px;
+    bottom: 15px;
     left: 10px;
     right: 10px;
     justify-content: space-around;
     align-items: center;
     padding: 0 40px;
-    z-index: 100;
-    pointer-events: none; /* Das bleibt auf none, damit man zwischen den Buttons 
-       durchklicken kann (auf das Spiel) */
-}
+    z-index: 99999;
 
-.touch-buttons .ps-button:active {
-    transform: scale(0.9); /* Button wird beim Drücken kurz kleiner */
-}
+    &.show {
+        pointer-events: auto;
+        display: flex;
+    }
 
-/* Falls du einen speziellen Effekt beim Drüberfahren willst: */
-.touch-buttons .ps-button:hover {
-    filter: brightness(1.2);
-    transform: scale(1.1);
-}
-/* Die Gruppen (Links/Rechts) wieder klickbar machen */
-.touch-buttons .left,
-.touch-buttons .right {
-    display: flex;
-    gap: 20px;
-    pointer-events: auto;
-}
+    .left,
+    .right {
+        display: flex;
+        gap: 20px;
+        pointer-events: auto;
+    }
 
-/* NUR auf mobilen Geräten oder schmalen Screens anzeigen */
-@media (max-width: 833px) {
-    .touch-buttons {
-        display: flex !important; /* Erzwingt das Anzeigen im Handy-Modus */
+    .ps-button {
+        width: 34px;
+        height: 34px;
+        background: radial-gradient(circle at 30% 30%, #3a3a3a, #000000);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 10px rgb(255 244 59);
+        &:hover {
+            filter: brightness(1.2);
+            transform: scale(1.1);
+        }
+        &:active {
+            transform: scale(0.9);
+        }
+        img {
+            width: 30px;
+            height: 30px;
+            filter: brightness(1);
+            pointer-events: none;
+        }
+    }
+}
+.ps-button {
+    &.sound {
+        img {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+        }
     }
 }
 
-/* Styling der Buttons (passend zum Sound-Button deines Freundes) */
-.touch-buttons .ps-button {
-    width: 34px; /* Größer für bessere Bedienung am Handy */
-    height: 34px;
-    background: radial-gradient(circle at 30% 30%, #3a3a3a, #000000);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 0 10px rgb(255 244 59);
+.toggle-touch-wrapper {
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    z-index: 10000;
+    cursor: pointer;
+    display: block;
+
+    img {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        transition: transform 0.2s ease;
+    }
+
+    &:hover img {
+        transform: scale(1.2);
+    }
+}
+/* ----------------------------------------------------- */
+@media (min-width: 1440px) {
+    .toggle-touch-wrapper {
+        img {
+            width: 70px;
+            height: 70px;
+        }
+    }
 }
 
-.touch-buttons .ps-button img {
-    width: 30px; /* Icons innerhalb der Buttons */
-    height: 30px;
-    filter: brightness(1);
+@media (max-width: 1180px) {
+    .toggle-touch-wrapper {
+        img {
+            width: 55px;
+            height: 55px;
+        }
+    }
 }
 
 @media (max-width: 1100px) {
     .start-icons {
         transform: translate(-50%, -50%) scale(0.85);
     }
-}
-
-@media (max-width: 1100px) {
     .help-screen,
     .story-screen,
     .screen {
@@ -451,21 +503,70 @@ canvas {
     }
 }
 
-@media (min-width: 1025px) {
-    .game-screen .sound {
-        position: absolute !important;
-        top: 20px !important;
-        right: 20px !important;
-        z-index: 5000 !important;
-    }
-
-    #sound-img {
-        width: 40px !important;
-        height: auto;
+@media (max-width: 1024px) {
+    .screen {
+        p {
+            font-size: 30px;
+        }
     }
 }
 
+@media (max-width: 925px) {
+    canvas {
+        max-height: 80vh !important;
+        object-fit: contain;
+    }
+
+    .game-screen {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+    .gameover-screen > div,
+    .gamewin-screen > div {
+        cursor: pointer;
+        transition: all 0.15s ease;
+        margin-top: 110px;
+    }
+}
+
+@media (max-width: 915px) {
+    .toggle-touch-wrapper {
+        img {
+            width: 50px;
+            height: 50px;
+        }
+    }
+}
+
+/* --------------------------------------------------- */
+
 @media (orientation: landscape) and (max-height: 500px) {
+    .ps-button.sound {
+        top: 52px;
+        right: 2px;
+    }
+    .toggle-touch-wrapper {
+        display: block !important;
+        z-index: 100001; /* Sicherstellen, dass er oben liegt */
+    }
+
+    /* Die Buttons selbst sind standardmäßig versteckt... */
+    .touch-buttons {
+        display: none !important;
+        position: absolute !important;
+        bottom: 20px !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        z-index: 99999 !important;
+    }
+
+    /* ...und erscheinen NUR, wenn die Toggle-Funktion (JS) die Klasse .show hinzufügt */
+    .touch-buttons.show {
+        display: flex !important;
+    }
     .game-container {
         width: 100vw !important;
         height: 100vh !important;
@@ -482,7 +583,7 @@ canvas {
         pointer-events: auto;
     }
     .help-screen,
-    .impressum-icon-buttonn,
+    .impressum-icon-button,
     .story-screen,
     .screen {
         width: 90% !important;
@@ -526,6 +627,16 @@ canvas {
 }
 
 @media (orientation: portrait) {
+    .toggle-touch-wrapper {
+        .toggle-touch-wrapper {
+            opacity: 0.5;
+            pointer-events: auto;
+            display: block;
+        }
+    }
+    .rotate {
+        display: flex !important;
+    }
     .start-icons {
         display: flex;
         flex-direction: column;
@@ -546,7 +657,7 @@ canvas {
         flex-direction: column !important;
         align-items: center !important;
         width: 100%;
-        margin-top: 0px !important;
+        margin-top: 0 !important;
         > div {
             width: 180px !important;
             height: 180px !important;
@@ -618,18 +729,17 @@ canvas {
 }
 
 .touch-buttons {
-    /* ... deine bisherigen Regeln (position, display, etc.) ... */
-
-    touch-action: none; /* DAS HIER FEHLT! Sperrt den gesamten Bereich für Scroll-Gesten */
-    pointer-events: none; /* Erlaubt das Durchklicken auf das Spiel */
+    touch-action: none;
+    pointer-events: none;
 }
 
 .touch-buttons .left,
 .touch-buttons .right,
 .touch-buttons .ps-button {
-    touch-action: none; /* Sicherheitshalber auch hier */
-    pointer-events: auto; /* Damit die Tasten klickbar bleiben */
+    touch-action: none;
+    pointer-events: auto;
 }
+
 @media (orientation: landscape) and (max-height: 500px) {
     .start-icons {
         transform: translate(-50%, -40%) scale(0.5) !important;
@@ -661,94 +771,32 @@ canvas {
     }
 }
 
-@media (max-width: 1024px) {
-    .screen {
-        p {
-            font-size: 30px;
-        }
+
+
+@media (max-height: 500px) {
+    .toggle-touch-wrapper {
+        display: none !important;
+    }
+    .touch-buttons {
+        display: none !important; /* Joystick bei weniger als 500px erzwingen aus */
     }
 }
 
-@media (max-width: 925px) {
-    canvas {
-        max-height: 80vh !important;
-        object-fit: contain;
-    }
 
-    .game-screen {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
+@media (max-width: 833px) {
+    .toggle-touch-wrapper {
+        display: none;
     }
-    .gameover-screen > div,
-    .gamewin-screen > div {
-        cursor: pointer;
-        transition: all 0.15s ease;
-        margin-top: 110px;
-    }
-    #game-screen .sound,
-    .ps-button.sound {
+    .touch-buttons {
         display: flex !important;
-        position: absolute !important;
-        top: 15px !important;
-        right: 15px !important;
-        z-index: 9999 !important;
-        background: rgba(0, 0, 0, 0.2) !important;
-        padding: 4px !important;
-        border-radius: 50% !important;
-        cursor: pointer !important;
-    }
-    #sound-img {
-        width: 18px !important;
-        height: auto;
-        filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3)) !important;
-        display: block !important;
-        opacity: 0.8;
-    }
-}
 
-#sound-img {
-    width: 15px !important;
-    height: auto;
-    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3)) !important;
-    display: block !important;
-    opacity: 0.8;
-}
-
-#sound-img {
-    width: 10px !important;
-    height: 10px !important;
-    display: block !important;
-    object-fit: contain;
-    position: relative;
-    z-index: 10001;
-}
-
-.ps-button.sound {
-    position: absolute !important;
-    top: 15px !important;
-    right: 5px !important;
-    z-index: 10000 !important;
-    cursor: pointer;
-    background: rgba(174, 8, 8, 0.4);
-    padding: 5px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.1s ease;
-}
-
-.ps-button.sound:hover {
-    transform: scale(1.1);
-    filter: brightness(1.2);
-}
-
-@media (max-width: 836px) {
-    #game-screen .sound,
-    .ps-button.sound {
-        top: 15px !important;
-        right: 110px !important;
+        position: absolute;
+        bottom: 40px !important;
+        left: 10px;
+        right: 10px;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0 40px;
+        z-index: 99999;
     }
 }
