@@ -737,6 +737,12 @@ canvas {
     pointer-events: auto;
 }
 
+
+@media (max-width: 896px) {
+    .toggle-touch-wrapper {
+        display: flex !important ;
+    }
+}
 @media (max-width: 833px) {
     .toggle-touch-wrapper {
         display: none;
@@ -760,7 +766,7 @@ canvas {
         display: none !important;
     }
     .touch-buttons {
-        display: none !important; 
+        display: flex !important; 
     }
 }
 
