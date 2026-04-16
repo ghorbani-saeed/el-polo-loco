@@ -20,7 +20,7 @@ class Hen extends Chicken {
 
     /** @type {string[]} Image shown when the hen is defeated */
     IMAGES_DEAD = [
-        "assets/img/3_enemies_chicken/chicken_normal/2_dead/dead.png"
+        "assets/img/3_enemies_chicken/chicken_normal/2_dead/dead.png",
     ];
 
     /** @type {HTMLAudioElement} Sound played upon the hen's death */

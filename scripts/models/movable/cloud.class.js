@@ -42,14 +42,14 @@ class Cloud extends MovableObject {
     }
 
     /**
-     * Starts the drift movement. 
+     * Starts the drift movement.
      * Moves the cloud to the left at 60 frames per second.
      */
     move() {
         this.intervals.push(
             setInterval(() => {
                 this.moveLeft();
-            }, 1000 / 60)
+            }, 1000 / 60),
         );
     }
 }

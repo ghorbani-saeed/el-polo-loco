@@ -4,9 +4,9 @@
  * @extends MovableObject
  */
 class Chicken extends MovableObject {
-    /** * Collision box fine-tuning. 
+    /** * Collision box fine-tuning.
      * Default is 0 as chickens usually use the full sprite size for collisions.
-     * @type {Object} 
+     * @type {Object}
      */
     offset = {
         right: 0,
@@ -54,7 +54,7 @@ class Chicken extends MovableObject {
     }
 
     /**
-     * Executes the death animation and removes the chicken from the visual 
+     * Executes the death animation and removes the chicken from the visual
      * game world after a short delay by setting dimensions to 0.
      */
     playDeadAnimation() {
@@ -81,7 +81,7 @@ class Chicken extends MovableObject {
     }
 
     /**
-     * Movement loop (60 FPS). 
+     * Movement loop (60 FPS).
      * Continuously moves the chicken to the left as long as it is alive.
      */
     move() {

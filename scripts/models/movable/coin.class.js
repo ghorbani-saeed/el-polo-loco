@@ -49,7 +49,7 @@ class Coin extends MovableObject {
         let maximumPosition =
             this.world.level.gameEndPosition - this.world.level.endboss.w;
         this.x = 400 + Math.random() * maximumPosition;
-        this.y = 50 + Math.random() * 250; 
+        this.y = 50 + Math.random() * 250;
     }
 
     /**
@@ -67,7 +67,7 @@ class Coin extends MovableObject {
         this.intervals.push(
             setInterval(() => {
                 this.playAnimation(this.IMAGES);
-            }, 1000 / 5)
+            }, 1000 / 5),
         );
     }
 
@@ -94,7 +94,7 @@ class Coin extends MovableObject {
                     this.w--;
                     this.h--;
                 }
-            }, 0.5)
+            }, 0.5),
         );
     }
 

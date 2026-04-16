@@ -1,213 +1,296 @@
+/**
+ * Represents the final boss enemy in the game.
+ * Handles AI behavior including following the player, attacking, and health management.
+ * @extends MovableObject
+ */
 class Endboss extends MovableObject {
-  END_BOSS_DEAD_SOUND;
-  deadSoundPlayed = false;
+    /** @type {HTMLAudioElement} Sound played when the boss dies. */
+    END_BOSS_DEAD_SOUND;
+    /** @type {boolean} Flag to prevent multiple triggers of the death sound. */
+    deadSoundPlayed = false;
 
-  y = 90;
-  w = 300;
-  h = 350;
-  energy = 100;
-  speed = 2;
-  energyToRemove = 0;
-  moving = false;
-  lastAttack;
+    /** @type {number} Vertical position of the boss. */
+    y = 90;
+    /** @type {number} Width of the boss object. */
+    w = 300;
+    /** @type {number} Height of the boss object. */
+    h = 350;
+    /** @type {number} Current energy/health points of the boss. */
+    energy = 100;
+    /** @type {number} Horizontal movement speed. */
+    speed = 2;
+    /** @type {number} Amount of energy to remove per hit (calculated based on level bottles). */
+    energyToRemove = 0;
+    /** @type {boolean} Determines if the boss is currently active and moving. */
+    moving = false;
+    /** @type {number} Timestamp of the last attack performed. */
+    lastAttack;
 
-  movingDirection = "left";
-  offset = {
-    right: 10,
-    left: 50,
-    top: 50,
-    bottom: 10
-  };
+    /** @type {string} Current movement direction ("left" or "right"). */
+    movingDirection = "left";
+    /** @type {Object} Defined offsets for collision detection. */
+    offset = {
+        right: 10,
+        left: 50,
+        top: 50,
+        bottom: 10,
+    };
 
-  IMAGES_ALERT = [
-    "assets/img/4_enemie_boss_chicken/2_alert/G5.png",
-    "assets/img/4_enemie_boss_chicken/2_alert/G6.png",
-    "assets/img/4_enemie_boss_chicken/2_alert/G7.png",
-    "assets/img/4_enemie_boss_chicken/2_alert/G8.png",
-    "assets/img/4_enemie_boss_chicken/2_alert/G9.png",
-    "assets/img/4_enemie_boss_chicken/2_alert/G10.png",
-    "assets/img/4_enemie_boss_chicken/2_alert/G11.png",
-    "assets/img/4_enemie_boss_chicken/2_alert/G12.png",
-  ];
+    /** @type {string[]} Animation frames for the alert state. */
+    IMAGES_ALERT = [
+        "assets/img/4_enemie_boss_chicken/2_alert/G5.png",
+        "assets/img/4_enemie_boss_chicken/2_alert/G6.png",
+        "assets/img/4_enemie_boss_chicken/2_alert/G7.png",
+        "assets/img/4_enemie_boss_chicken/2_alert/G8.png",
+        "assets/img/4_enemie_boss_chicken/2_alert/G9.png",
+        "assets/img/4_enemie_boss_chicken/2_alert/G10.png",
+        "assets/img/4_enemie_boss_chicken/2_alert/G11.png",
+        "assets/img/4_enemie_boss_chicken/2_alert/G12.png",
+    ];
 
-  IMAGES_ATTACK = [
-    "assets/img/4_enemie_boss_chicken/3_attack/G13.png",
-    "assets/img/4_enemie_boss_chicken/3_attack/G14.png",
-    "assets/img/4_enemie_boss_chicken/3_attack/G15.png",
-    "assets/img/4_enemie_boss_chicken/3_attack/G16.png",
-    "assets/img/4_enemie_boss_chicken/3_attack/G17.png",
-    "assets/img/4_enemie_boss_chicken/3_attack/G18.png",
-    "assets/img/4_enemie_boss_chicken/3_attack/G19.png",
-    "assets/img/4_enemie_boss_chicken/3_attack/G20.png",
-  ];
+    /** @type {string[]} Animation frames for the attack state. */
+    IMAGES_ATTACK = [
+        "assets/img/4_enemie_boss_chicken/3_attack/G13.png",
+        "assets/img/4_enemie_boss_chicken/3_attack/G14.png",
+        "assets/img/4_enemie_boss_chicken/3_attack/G15.png",
+        "assets/img/4_enemie_boss_chicken/3_attack/G16.png",
+        "assets/img/4_enemie_boss_chicken/3_attack/G17.png",
+        "assets/img/4_enemie_boss_chicken/3_attack/G18.png",
+        "assets/img/4_enemie_boss_chicken/3_attack/G19.png",
+        "assets/img/4_enemie_boss_chicken/3_attack/G20.png",
+    ];
 
-  IMAGES_HURT = [
-    "assets/img/4_enemie_boss_chicken/4_hurt/G21.png",
-    "assets/img/4_enemie_boss_chicken/4_hurt/G22.png",
-    "assets/img/4_enemie_boss_chicken/4_hurt/G23.png",
-  ];
+    /** @type {string[]} Animation frames for when the boss is hurt. */
+    IMAGES_HURT = [
+        "assets/img/4_enemie_boss_chicken/4_hurt/G21.png",
+        "assets/img/4_enemie_boss_chicken/4_hurt/G22.png",
+        "assets/img/4_enemie_boss_chicken/4_hurt/G23.png",
+    ];
 
-  IMAGES_DEAD = [
-    "assets/img/4_enemie_boss_chicken/5_dead/G24.png",
-    "assets/img/4_enemie_boss_chicken/5_dead/G25.png",
-    "assets/img/4_enemie_boss_chicken/5_dead/G26.png",
-  ];
+    /** @type {string[]} Animation frames for the death sequence. */
+    IMAGES_DEAD = [
+        "assets/img/4_enemie_boss_chicken/5_dead/G24.png",
+        "assets/img/4_enemie_boss_chicken/5_dead/G25.png",
+        "assets/img/4_enemie_boss_chicken/5_dead/G26.png",
+    ];
 
-  IMAGES_WALK = [
-    "assets/img/4_enemie_boss_chicken/1_walk/G1.png",
-    "assets/img/4_enemie_boss_chicken/1_walk/G2.png",
-    "assets/img/4_enemie_boss_chicken/1_walk/G3.png",
-    "assets/img/4_enemie_boss_chicken/1_walk/G4.png",
-  ];
+    /** @type {string[]} Animation frames for walking movement. */
+    IMAGES_WALK = [
+        "assets/img/4_enemie_boss_chicken/1_walk/G1.png",
+        "assets/img/4_enemie_boss_chicken/1_walk/G2.png",
+        "assets/img/4_enemie_boss_chicken/1_walk/G3.png",
+        "assets/img/4_enemie_boss_chicken/1_walk/G4.png",
+    ];
 
-  constructor() {
-    super();
-    this.loadImage(this.IMAGES_ALERT[0]);
-    this.loadAllImages();
-    this.setSounds(); 
-    this.animate();
-    this.move();
-  }
+    /**
+     * Creates an instance of the Endboss.
+     * Initializes images, sounds, and starts the movement/animation loops.
+     */
+    constructor() {
+        super();
+        this.loadImage(this.IMAGES_ALERT[0]);
+        this.loadAllImages();
+        this.setSounds();
+        this.animate();
+        this.move();
+    }
 
-  loadAllImages() {
-    this.loadImages(this.IMAGES_WALK);
-    this.loadImages(this.IMAGES_ALERT);
-    this.loadImages(this.IMAGES_ATTACK);
-    this.loadImages(this.IMAGES_HURT);
-    this.loadImages(this.IMAGES_DEAD);
-  }
+    /**
+     * Preloads all required images for different boss states.
+     */
+    loadAllImages() {
+        this.loadImages(this.IMAGES_WALK);
+        this.loadImages(this.IMAGES_ALERT);
+        this.loadImages(this.IMAGES_ATTACK);
+        this.loadImages(this.IMAGES_HURT);
+        this.loadImages(this.IMAGES_DEAD);
+    }
 
+    /**
+     * Initializes the audio objects and sets their volume levels.
+     */
     setSounds() {
-    this.END_BOSS_DEAD_SOUND = new Audio("assets/sounds/endboss-dead.mp3");
-    this.END_BOSS_HIT_SOUND = new Audio("assets/sounds/endboss_hit.mp3"); 
-    this.END_BOSS_DEAD_SOUND.volume = 0.3;
-    this.END_BOSS_HIT_SOUND.volume = 0.4;
-  }
+        this.END_BOSS_DEAD_SOUND = new Audio("assets/sounds/endboss-dead.mp3");
+        this.END_BOSS_HIT_SOUND = new Audio("assets/sounds/endboss_hit.mp3");
+        this.END_BOSS_DEAD_SOUND.volume = 0.3;
+        this.END_BOSS_HIT_SOUND.volume = 0.4;
+    }
 
- 
-  setWorld(world) {
-    this.world = world;
-    this.x = this.world.level.gameEndPosition + 300;
-    this.energyToRemove = 100 / (this.world.level.bottles.length - 5);
-  }
+    /**
+     * Assigns the world instance to the boss and calculates initial position and damage scaling.
+     * @param {World} world - The main game world instance.
+     */
+    setWorld(world) {
+        this.world = world;
+        this.x = this.world.level.gameEndPosition + 300;
+        this.energyToRemove = 100 / (this.world.level.bottles.length - 5);
+    }
 
-  isMoving() {
-    return this.moving;
-  }
+    /**
+     * Checks if the boss is currently in a moving state.
+     * @returns {boolean} True if moving.
+     */
+    isMoving() {
+        return this.moving;
+    }
 
-  attack() {
-    this.lastAttack = new Date().getTime();
-  }
+    /**
+     * Triggers the attack logic by setting the current timestamp.
+     */
+    attack() {
+        this.lastAttack = new Date().getTime();
+    }
 
-  
-  isAttacking() {
-    let timePassed = (new Date().getTime() - this.lastAttack) / 1000;
-    return timePassed < 1;
-  }
+    /**
+     * Determines if the boss is currently in the middle of an attack animation window.
+     * @returns {boolean} True if an attack was triggered within the last second.
+     */
+    isAttacking() {
+        let timePassed = (new Date().getTime() - this.lastAttack) / 1000;
+        return timePassed < 1;
+    }
 
-   isDead() {
-  return this.energy <= 0;
-}
-   checkEndBossIsDead() {
-    if (this.isDead()) {
-      if (!this.deadSoundPlayed) {
-        if (this.world.isMute === false) {
-          this.END_BOSS_DEAD_SOUND.play();
+    /**
+     * Checks if the boss has no energy left.
+     * @returns {boolean} True if dead.
+     */
+    isDead() {
+        return this.energy <= 0;
+    }
+
+    /**
+     * Monitors death status, plays death sound, and triggers the win game condition.
+     */
+    checkEndBossIsDead() {
+        if (this.isDead()) {
+            if (!this.deadSoundPlayed) {
+                if (this.world.isMute === false) {
+                    this.END_BOSS_DEAD_SOUND.play();
+                }
+                this.deadSoundPlayed = true;
+            }
+            setTimeout(() => {
+                this.world.gameWin = true;
+            }, 2000);
         }
-        this.deadSoundPlayed = true;
-      }
-      setTimeout(() => {
-        this.world.gameWin = true;
-      }, 2000);
     }
-  }
 
-  playDeadAnimation() {
-    this.playAnimation(this.IMAGES_DEAD);
-    this.moving = false;
-    this.y += 40;
-  }
-
-  playHurtAnimation() {
-  this.moving = false;
-  this.playAnimation(this.IMAGES_HURT);
-
-  setTimeout(() => {
-    this.moving = true;
-  }, 500);
-}
-  
-playAttackAnimation() {
-  this.moving = false;
-  this.playAnimation(this.IMAGES_ATTACK);
-
-  setTimeout(() => {
-    this.moving = true;
-  }, 1000);
-}
- 
-
-  animate() {
-  this.intervals.push(setInterval(() => {
-    if (this.isDead()) this.playDeadAnimation();
-    else if (this.isHurt()) this.playHurtAnimation();
-    else if (this.isAttacking()) this.playAttackAnimation();
-    else if (this.isMoving()) this.playAnimation(this.IMAGES_WALK);
-    else this.playAnimation(this.IMAGES_ALERT);
-  }, 1000 / 6));
-}
-
-  checkShouldMoveLeft() {
-    if (this.world.character.x + this.world.character.w < this.x) {
-      this.movingDirection = "left";
+    /**
+     * Plays the death animation sequence and disables movement.
+     */
+    playDeadAnimation() {
+        this.playAnimation(this.IMAGES_DEAD);
+        this.moving = false;
+        this.y += 40;
     }
-  }
 
-  checkShouldMoveRight() {
-    if (this.x + this.w < this.world.character.x) {
-      this.movingDirection = "right";
+    /**
+     * Plays the hurt animation sequence and temporarily stops movement.
+     */
+    playHurtAnimation() {
+        this.moving = false;
+        this.playAnimation(this.IMAGES_HURT);
+
+        setTimeout(() => {
+            this.moving = true;
+        }, 500);
     }
-  }
 
-  handleMovingRightOrLeft() {
-    if (this.movingDirection === "right") {
-      this.moveRight();
-      this.otherDirection = true;
-    } else {
-      this.moveLeft();
-      this.otherDirection = false;
+    /**
+     * Plays the attack animation sequence and temporarily stops movement.
+     */
+    playAttackAnimation() {
+        this.moving = false;
+        this.playAnimation(this.IMAGES_ATTACK);
+
+        setTimeout(() => {
+            this.moving = true;
+        }, 1000);
     }
-  }
 
-  move() {
-    this.intervals.push(
-      setInterval(() => {
-        if (this.isMoving()) {
-          this.checkShouldMoveLeft();
-          this.checkShouldMoveRight();
-          this.handleMovingRightOrLeft();
+    /**
+     * Sets up the interval to handle visual state updates (animations).
+     */
+    animate() {
+        this.intervals.push(
+            setInterval(() => {
+                if (this.isDead()) this.playDeadAnimation();
+                else if (this.isHurt()) this.playHurtAnimation();
+                else if (this.isAttacking()) this.playAttackAnimation();
+                else if (this.isMoving()) this.playAnimation(this.IMAGES_WALK);
+                else this.playAnimation(this.IMAGES_ALERT);
+            }, 1000 / 6),
+        );
+    }
+
+    /**
+     * Checks if the player character is to the left of the boss and updates direction.
+     */
+    checkShouldMoveLeft() {
+        if (this.world.character.x + this.world.character.w < this.x) {
+            this.movingDirection = "left";
         }
-      }, 1000 / 60)
-    );
-  }
+    }
 
-  clearAllInterval() {
-    this.intervals.forEach((id) => clearInterval(id));
-    this.intervals = [];
-  }
+    /**
+     * Checks if the player character is to the right of the boss and updates direction.
+     */
+    checkShouldMoveRight() {
+        if (this.x + this.w < this.world.character.x) {
+            this.movingDirection = "right";
+        }
+    }
 
-  hit() {
-  if (this.isDead()) return; 
-  if (this.world && !this.world.isMute) {
-    this.END_BOSS_HIT_SOUND.play();
-  }
-  this.energy -= 25; 
-  if (this.energy < 0) this.energy = 0;
-  if (this.world) {
-    this.world.level.endbossStatusBar.setPersentage(this.energy);
-    this.world.level.endbossStatusBar.visible = true;
-  }
-  this.checkEndBossIsDead();
+    /**
+     * Executes the physical movement and handles image flipping based on direction.
+     */
+    handleMovingRightOrLeft() {
+        if (this.movingDirection === "right") {
+            this.moveRight();
+            this.otherDirection = true;
+        } else {
+            this.moveLeft();
+            this.otherDirection = false;
+        }
+    }
+
+    /**
+     * Sets up the main movement interval (60 FPS) for AI behavior.
+     */
+    move() {
+        this.intervals.push(
+            setInterval(() => {
+                if (this.isMoving()) {
+                    this.checkShouldMoveLeft();
+                    this.checkShouldMoveRight();
+                    this.handleMovingRightOrLeft();
+                }
+            }, 1000 / 60),
+        );
+    }
+
+    /**
+     * Clears all active intervals associated with the boss instance.
+     */
+    clearAllInterval() {
+        this.intervals.forEach((id) => clearInterval(id));
+        this.intervals = [];
+    }
+
+    /**
+     * Processes damage taken by the boss, updates the health bar, and plays hit sounds.
+     */
+    hit() {
+        if (this.isDead()) return;
+        if (this.world && !this.world.isMute) {
+            this.END_BOSS_HIT_SOUND.play();
+        }
+        this.energy -= 25;
+        if (this.energy < 0) this.energy = 0;
+        if (this.world) {
+            this.world.level.endbossStatusBar.setPersentage(this.energy);
+            this.world.level.endbossStatusBar.visible = true;
+        }
+        this.checkEndBossIsDead();
+    }
 }
-}
-
