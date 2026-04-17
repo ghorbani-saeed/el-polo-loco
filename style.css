@@ -28,28 +28,33 @@ body {
     overflow: hidden;
 }
 
-.start-game,
-.bottom-row > div,
-.impressum-icon-button {
-    width: 200px !important; /* Hier deine Wunschgröße wählen */
-    height: 200px !important; /* Muss quadratisch sein für aspect-ratio */
-    flex: 0 0 200px !important; /* Verhindert das Schrumpfen/Wachsen */
-    background-size: contain !important;
-    background-repeat: no-repeat;
-    background-position: center;
-    margin: 0 !important;
+
+.help, .story {
+    width: 400px !important;
+    height: 400px !important;
+    flex: 0 0 400px !important;
 }
 
-/* Layout-Anpassung: Alle Icons in einer Reihe oder ordentlich gruppiert */
+.impressum-icon-button {
+    width: 250px !important;
+    height: 250px !important;
+    flex: 0 0 250px !important;
+}
+
 .start-icons {
-    gap: 30px !important; /* Abstand zwischen Start-Button und der unteren Reihe */
+    gap: 30px !important; /
 }
 
 .bottom-row {
-    margin-top: 20px !important;
-    gap: 30px !important; /* Abstand zwischen Help, Story, Impressum */
-    width: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important; 
+    max-width: none !important; 
+    gap: 40px !important; 
 }
+
 .rotate {
     display: none;
     position: fixed;
@@ -156,9 +161,13 @@ body {
 }
 .help {
     background-image: url("./assets/icon/help.png");
+    
 }
 .story {
     background-image: url("./assets/icon/story.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 
     &:hover {
         transform: scale(1) rotate(5deg) !important;
@@ -166,9 +175,13 @@ body {
     }
 }
 .impressum-icon-button {
-    background-image: url("./assets/icon/impressum.png");
+    background-image: url("./assets/icon/inpressum.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     width: 250px !important;
     height: 250px !important;
+    flex: 0 0 250px !important;
     opacity: 0.8;
     &:hover {
         transform: scale(1.05) !important;
@@ -745,23 +758,28 @@ canvas {
     }
 
     .bottom-row {
-        height: auto !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        width: 100%;
-        margin-top: 0 !important;
-        > div {
-            width: 180px !important;
-            height: 180px !important;
-            flex: 0 0 120px !important;
-            min-width: unset !important;
-            max-width: unset !important;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 30px; /* Ein fester Pixelwert ist sicherer als 5vw */
+    margin-top: 50px;
+
+    > div {
+        /* ÄNDERUNG HIER: flex-basis auf 400px und shrink auf 0 */
+        flex: 0 0 400px !important; 
+        width: 400px !important;
+        height: 400px !important;
+        flex-shrink: 0 !important; /* Verhindert das Schrumpfen */
+        
+        aspect-ratio: 1/1;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        transition: all 0.2s ease;
     }
+}
 
     .bottom-row > .impressum-icon-button {
         width: 120px !important;
